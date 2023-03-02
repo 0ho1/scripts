@@ -1,0 +1,15 @@
+local mt = getrawmetatable(game)
+local namecall = mt.__namecall
+setreadonly(mt,false)
+mt.__namecall = newcclosure(function(self,...)
+    local meta = {...}
+    if getnamecallmethod() == 'FireServer' then
+        if tostring(self) == 'SetTarget' and meta[2] == player.Character then
+            if _G.Anti then
+                meta[3] = "Passive"..meta[3]
+            end
+        end
+    end
+    return namecall(self, unpack(meta))
+end)
+setreadonly(mt,true)
