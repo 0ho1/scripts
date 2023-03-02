@@ -1,0 +1,17 @@
+local mt = getrawmetatable(game)
+local namecall = mt.__namecall
+setreadonly(mt,false)
+mt.__namecall = newcclosure(function(self,...)
+    local meta = {...}
+    if getnamecallmethod() == 'FireServer' then
+        if tostring(self) == 'DealWeaponDamage' or tostring(self) == "DealStrengthDamage" and meta[3] == player.Character then
+          if meta[2] ~= player.Character then
+              meta[3] = meta[2]
+          end
+        elseif tostring(self) == 'DealBossDamage' or tostring(self) == "DealAttackDamage" and meta[2] == player.Character then
+          meta[2] = meta[1]
+        end
+    end
+    return namecall(self, unpack(meta))
+end)
+setreadonly(mt,true)
